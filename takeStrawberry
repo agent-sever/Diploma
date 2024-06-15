@@ -1,0 +1,117 @@
+#define LED 4
+#define ServoUp 12
+#define ServoBase 16
+#define ServoRight 2
+#define ServoLeft 13
+void setup() {
+  // put your setup code here, to run once:
+  pinMode(LED, OUTPUT);
+  pinMode(ServoBase, OUTPUT);
+  pinMode(ServoRight, OUTPUT);
+  pinMode(ServoLeft, OUTPUT);
+  pinMode(ServoUp, OUTPUT);
+  
+}
+void rotateServoR(int servoPin, int angle){
+  for(int i=0; i<angle/10; i++){
+    digitalWrite(servoPin, HIGH);
+    delayMicroseconds(1000);
+    digitalWrite(servoPin, LOW);
+    delayMicroseconds(19000);
+  }
+}
+void rotateServoL(int servoPin, int angle){
+  for(int i=0; i<angle/10; i++){
+    digitalWrite(servoPin, HIGH);
+    delayMicroseconds(2000);
+    digitalWrite(servoPin, LOW);
+    delayMicroseconds(18000);
+  }
+}
+void stopServo(int servoPin){
+  digitalWrite(servoPin, HIGH);
+  delayMicroseconds(1500);
+  digitalWrite(servoPin, LOW);
+  delayMicroseconds(18500);
+}
+void takerManipulator(int state){
+  if (state>0){
+    rotateServoR(ServoUp, 70);
+    stopServo(ServoUp);
+  }
+  else if (state<0){
+    rotateServoL(ServoUp, 70);
+    stopServo(ServoUp);
+  }
+  else {
+    stopServo(ServoUp);
+  }
+}
+void setManipulator(int horizontal, int vertical, int base){
+
+//________________________________________________-
+  if (horizontal>0){
+    rotateServoR(ServoRight, horizontal);
+    stopServo(ServoRight);
+  }
+  else if (horizontal<0){
+    rotateServoL(ServoRight, 0-horizontal);
+    stopServo(ServoRight);
+  }
+  else {
+    stopServo(ServoRight);
+  }
+//________________________________________________-
+  if (vertical>0){
+    rotateServoR(ServoRight, vertical);
+    stopServo(ServoLeft);
+  }
+  else if (vertical<0){
+    rotateServoL(ServoRight, 0-vertical);
+    stopServo(ServoLeft);
+  }
+  else {
+    stopServo(ServoLeft);
+  }
+//____________________________________________________-
+  if (base>0){
+    rotateServoR(ServoBase, base);
+    stopServo(ServoBase);
+  }
+  else if (base<0){
+    rotateServoL(ServoBase, 0-base);
+    stopServo(ServoBase);
+  }
+  else {
+    stopServo(ServoBase);
+  }
+}
+////////////////////////////////////////////////////////////////
+void takeStrawberry(){
+  digitalWrite(LED, HIGH);
+  setManipulator(-90, 0, 0);
+  delay(2000);
+  takerManipulator(1);
+  delay(2000);
+  setManipulator(90, 0, 0);
+  delay(1000);
+  setManipulator(0, 0, 180);
+  delay(1000);
+  setManipulator(0, -90, 0);
+  delay(2000);
+  takerManipulator(-1);
+  delay(1000);
+  setManipulator(0, 90, 0);
+  delay(1000);
+  setManipulator(0, 0, -180);
+  delay(1000);
+  digitalWrite(LED, LOW);
+}
+void loop() {
+  // put your main code here, to run repeatedly:
+  takeStrawberry();
+  
+  delay(10000);
+
+ 
+}
